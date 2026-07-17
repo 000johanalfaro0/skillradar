@@ -1,0 +1,10 @@
+# Copy to .dev.vars and fill in. .dev.vars is gitignored.
+# GitHub personal access token (public repo + read; raises rate limits to 5000/h).
+GITHUB_TOKEN=
+# Google AI Studio key for Gemini 2.5 Flash.
+GEMINI_API_KEY=
+# GitHub OAuth App credentials (Settings > Developer settings > OAuth Apps).
+GITHUB_OAUTH_CLIENT_ID=
+GITHUB_OAUTH_CLIENT_SECRET=
+# Random string used to sign session cookies.
+SESSION_SECRET=

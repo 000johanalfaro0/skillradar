@@ -1,0 +1,23 @@
+{
+  "name": "skillradar",
+  "private": true,
+  "version": "0.0.0",
+  "description": "GitHub-trending style ranking app for Claude Code Skills, with AI critique and natural-language summaries.",
+  "scripts": {
+    "dev:api": "pnpm --filter @skillradar/api dev",
+    "dev:web": "pnpm --filter @skillradar/web dev",
+    "db:migrate:local": "pnpm --filter @skillradar/api db:migrate:local",
+    "db:migrate:remote": "pnpm --filter @skillradar/api db:migrate:remote",
+    "db:seed:local": "pnpm --filter @skillradar/api db:seed:local",
+    "build:web": "pnpm --filter @skillradar/web build",
+    "deploy:api": "pnpm --filter @skillradar/api deploy",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "packageManager": "pnpm@10.33.4",
+  "engines": {
+    "node": ">=20"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild", "workerd"]
+  }
+}

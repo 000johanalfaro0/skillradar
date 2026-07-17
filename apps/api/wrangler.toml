@@ -1,0 +1,49 @@
+name = "skillradar-api"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Daily at 06:00 UTC — the heart of the app: discover, measure, score, analyze.
+[triggers]
+crons = ["0 6 * * *"]
+
+[vars]
+# Public-ish config (non-secret). The frontend origin, used for OAuth redirect + CORS.
+APP_URL = "http://localhost:5173"
+GITHUB_OAUTH_CALLBACK = "http://localhost:8787/auth/github/callback"
+# Skills with one of these GitHub topics are discovered in addition to SKILL.md code search.
+SEED_TOPICS = ""
+# Always-scan these repos even if search misses them.
+SEED_REPOS = "anthropics/skills"
+# Max Gemini analyses per cron run (stay well under free-tier daily quota).
+ANALYZE_BATCH = "10"
+# Languages to generate the analysis in (multiplies Gemini usage per language).
+# Kept at "en" for now: the UI is bilingual, but generating content in every
+# language hits free-tier limits. Add "es" once heavy processing moves to Queues.
+ANALYZE_LANGS = "en"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "skillradar"
+database_id = "f436e6e4-b8c5-42aa-b886-f44a06a79842"
+migrations_dir = "migrations"
+
+[[kv_namespaces]]
+binding = "SESSIONS"
+id = "27744eadfac74f0aaa5ea6dc7872b8df"
+
+# Vector DB for semantic search (768-dim, cosine).
+# experimental_remote: no local emulation exists, so dev hits the real index.
+[[vectorize]]
+binding = "VECTORIZE"
+index_name = "skillradar-skills"
+experimental_remote = true
+
+# Workers AI — generates the embeddings (bge-base-en-v1.5). Always runs on Cloudflare's network.
+[ai]
+binding = "AI"
+experimental_remote = true
+
+# Secrets (set with `wrangler secret put NAME`, or locally in .dev.vars):
+#   GITHUB_TOKEN, GEMINI_API_KEY, GITHUB_OAUTH_CLIENT_ID,
+#   GITHUB_OAUTH_CLIENT_SECRET, SESSION_SECRET
