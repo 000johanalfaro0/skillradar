@@ -1,7 +1,7 @@
 # SkillRadar
 
-GitHub-trending–style ranking app for **Claude Code Skills** (`SKILL.md` files), with
-AI critique, plain-language summaries, and the predominant programming language per skill.
+Ranking and discovery app for reusable development skills (`SKILL.md` files), with
+automated review, plain-language summaries, and the predominant programming language per skill.
 
 ## How it works
 
@@ -10,10 +10,10 @@ The app's heart is **not** the UI — it's a daily Cloudflare **Cron Trigger** t
 1. **Discovers** skills on GitHub (Code Search for `SKILL.md` + configured topics + seed repos).
 2. **Measures** each skill (stars/forks/last commit) into `skill_snapshots` — one row per day.
 3. **Scores** them: `trend_7d`/`trend_30d` come from diffing today's snapshot vs N days ago.
-4. **Analyzes** new/changed skills with Gemini 2.5 Flash (cached in `skill_analysis`).
+4. **Analyzes** new or changed skills through a configured analysis provider (cached in `skill_analysis`).
 
-**Golden rule:** GitHub is the source of truth for hard data; Gemini only *interprets* text;
-the React app only ever reads precomputed values from the DB. No ranking math or AI calls at runtime.
+**Golden rule:** GitHub is the source of truth for hard data; automated analysis only interprets text;
+the React app reads precomputed values from the database and performs no analysis calls at runtime.
 
 ## Stack
 
