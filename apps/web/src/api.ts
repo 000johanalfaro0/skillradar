@@ -1,6 +1,7 @@
 import type { Skill, SkillDetail, Me, SortKey, TagCount } from './types';
 
-const BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:8787';
+export const API_CONFIGURED = Boolean(import.meta.env.VITE_API_URL);
+const BASE = import.meta.env.VITE_API_URL ?? '';
 
 async function get<T>(path: string): Promise<T> {
   const res = await fetch(`${BASE}${path}`, { credentials: 'include' });

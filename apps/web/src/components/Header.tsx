@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { useMe } from '../hooks';
 import { useI18n, type Lang } from '../i18n';
-import { loginUrl, logout } from '../api';
+import { API_CONFIGURED, loginUrl, logout } from '../api';
 
 export default function Header() {
   const { data } = useMe();
@@ -33,14 +33,14 @@ export default function Header() {
                 {t('nav.signOut')}
               </button>
             </div>
-          ) : (
+          ) : API_CONFIGURED ? (
             <a
               href={loginUrl()}
               className="rounded-md border border-edge bg-panel px-3 py-1.5 text-sm hover:border-accent"
             >
               {t('nav.signIn')}
             </a>
-          )}
+          ) : <span className="rounded-md border border-edge px-3 py-1.5 text-xs text-muted">{t('nav.demo')}</span>}
         </div>
       </div>
     </header>

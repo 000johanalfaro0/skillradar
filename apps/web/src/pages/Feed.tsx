@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { fetchSkills, searchSkills, fetchTags } from '../api';
+import { API_CONFIGURED, fetchSkills, searchSkills, fetchTags } from '../api';
 import type { SortKey } from '../types';
 import { useI18n } from '../i18n';
 import SkillCard from '../components/SkillCard';
@@ -16,7 +16,7 @@ export default function Feed() {
 
   const searching = query.trim().length > 0;
 
-  const { data: tagData } = useQuery({ queryKey: ['tags'], queryFn: fetchTags });
+  const { data: tagData } = useQuery({ queryKey: ['tags'], queryFn: fetchTags, enabled: API_CONFIGURED, retry: 1 });
 
   const { data, isLoading, isError } = useQuery({
     queryKey: searching ? ['search', query, tag] : ['skills', sort, tag],
@@ -24,6 +24,8 @@ export default function Feed() {
       searching
         ? searchSkills(query, { tag: tag ?? undefined })
         : fetchSkills(sort, { tag: tag ?? undefined }),
+    enabled: API_CONFIGURED,
+    retry: 1,
   });
 
   function onSubmit(e: React.FormEvent) {
@@ -98,8 +100,15 @@ export default function Feed() {
         </p>
       )}
 
-      {isLoading && <p className="text-muted">{t('state.loading')}</p>}
-      {isError && <p className="text-red-400">{t('state.error')}</p>}
+      {!API_CONFIGURED && (
+        <section role="status" className="rounded-lg border border-edge bg-panel p-5">
+          <h1 className="font-semibold text-gray-100">{t('state.previewTitle')}</h1>
+          <p className="mt-2 text-sm leading-6 text-muted">{t('state.previewBody')}</p>
+          <a className="mt-4 inline-block text-sm font-medium text-accent hover:underline" href="https://github.com/000johanalfaro0/skillradar">{t('state.viewCode')}</a>
+        </section>
+      )}
+      {API_CONFIGURED && isLoading && <p className="text-muted">{t('state.loading')}</p>}
+      {API_CONFIGURED && isError && <div role="alert"><p className="text-red-400">{t('state.error')}</p><button className="mt-2 text-sm text-accent hover:underline" onClick={() => window.location.reload()}>{t('state.retry')}</button></div>}
       {data && data.items.length === 0 && <p className="text-muted">{t('state.noMatches')}</p>}
 
       <div className="flex flex-col gap-3">
